@@ -12,71 +12,40 @@ export const PersonalInfoForm = () => {
     };
 
     return (
-        <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Personal Information</h2>
+        <section className="feature-card space-y-5">
+            <div>
+                <p className="section-caption">Profile Block</p>
+                <h2 className="section-title">Personal Information</h2>
+                <p className="text-sm text-app-muted mt-1">Set core identity details used across every template and export.</p>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input
-                        type="text"
-                        name="fullName"
-                        value={personalInfo.fullName}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                    />
+                    <label className="field-label">Full Name</label>
+                    <input type="text" name="fullName" value={personalInfo.fullName} onChange={handleChange} />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Email Header</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={personalInfo.email}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                    />
+                    <label className="field-label">Email</label>
+                    <input type="email" name="email" value={personalInfo.email} onChange={handleChange} />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Phone</label>
-                    <input
-                        type="tel"
-                        name="phone"
-                        value={personalInfo.phone}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                    />
+                    <label className="field-label">Phone</label>
+                    <input type="tel" name="phone" value={personalInfo.phone} onChange={handleChange} />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Location (City, State)</label>
-                    <input
-                        type="text"
-                        name="location"
-                        value={personalInfo.location}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                    />
+                    <label className="field-label">Location</label>
+                    <input type="text" name="location" value={personalInfo.location} onChange={handleChange} />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">LinkedIn Profile</label>
-                    <input
-                        type="url"
-                        name="linkedin"
-                        value={personalInfo.linkedin}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                    />
+                    <label className="field-label">LinkedIn</label>
+                    <input type="url" name="linkedin" value={personalInfo.linkedin} onChange={handleChange} />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">GitHub / Portfolio</label>
-                    <input
-                        type="url"
-                        name="github"
-                        value={personalInfo.github}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                    />
+                    <label className="field-label">Portfolio / GitHub</label>
+                    <input type="url" name="github" value={personalInfo.github} onChange={handleChange} />
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
@@ -98,33 +67,30 @@ export const SummaryForm = () => {
                 setIsGenerating(false);
             })
             .catch((err) => {
-                console.error("AI Error:", err);
+                console.error('AI Error:', err);
                 setIsGenerating(false);
             });
     };
 
     return (
-        <div className="space-y-4 mt-8">
-            <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex justify-between items-center">
-                Professional Summary
-                <button
-                    onClick={handleAIEnhance}
-                    disabled={isGenerating || !summary}
-                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 disabled:opacity-50"
-                >
+        <section className="feature-card space-y-4 mt-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p className="section-caption">Value Proposition</p>
+                    <h2 className="section-title">Professional Summary</h2>
+                </div>
+                <button onClick={handleAIEnhance} disabled={isGenerating || !summary} className="btn-secondary disabled:opacity-50">
                     <Sparkles className="w-4 h-4 mr-1" />
                     {isGenerating ? 'Enhancing...' : 'Enhance with AI'}
                 </button>
-            </h2>
-            <div>
-                <textarea
-                    rows={4}
-                    value={summary}
-                    onChange={handleChange}
-                    placeholder="Write a brief professional summary..."
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                />
             </div>
-        </div>
+
+            <textarea
+                rows={5}
+                value={summary}
+                onChange={handleChange}
+                placeholder="Write a concise, high-impact summary of your expertise and outcomes..."
+            />
+        </section>
     );
 };

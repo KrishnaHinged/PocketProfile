@@ -38,55 +38,47 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md border border-gray-100">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Sign in to your account
-                    </h2>
+        <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 surface-app-alt">
+            <div className="app-shell max-w-md w-full p-8">
+                <div className="text-center">
+                    <p className="hero-kicker">Welcome Back</p>
+                    <h2 className="mt-1 text-4xl font-extrabold">Continue Building</h2>
+                    <p className="text-sm text-app-muted mt-2">Sign in to manage and ship your resume versions faster.</p>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label className="sr-only">Email address</label>
-                            <input
-                                name="email"
-                                type="email"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Email address"
-                                value={email}
-                                onChange={onChange}
-                            />
-                        </div>
-                        <div>
-                            <label className="sr-only">Password</label>
-                            <input
-                                name="password"
-                                type="password"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Password"
-                                value={password}
-                                onChange={onChange}
-                            />
-                        </div>
+
+                <form className="mt-8 space-y-4" onSubmit={onSubmit}>
+                    <div>
+                        <label className="field-label">Email</label>
+                        <input
+                            name="email"
+                            type="email"
+                            required
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={onChange}
+                        />
+                    </div>
+                    <div>
+                        <label className="field-label">Password</label>
+                        <input
+                            name="password"
+                            type="password"
+                            required
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={onChange}
+                        />
                     </div>
 
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                        >
-                            {isLoading ? 'Signing in...' : 'Sign in'}
-                        </button>
-                    </div>
+                    <button type="submit" disabled={isLoading} className="btn-primary w-full disabled:opacity-50">
+                        {isLoading ? 'Signing in...' : 'Sign in'}
+                    </button>
                 </form>
-                <div className="text-center text-sm">
-                    <span>Don't have an account? </span>
-                    <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-                        Register here
+
+                <div className="text-center text-sm mt-6 text-app-muted">
+                    <span>New here? </span>
+                    <Link to="/register" className="font-semibold text-[#e63946] hover:text-[#c92233]">
+                        Create an account
                     </Link>
                 </div>
             </div>

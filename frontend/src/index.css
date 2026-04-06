@@ -1,9 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg: #f6f6f4;
+    --surface: #ffffff;
+    --surface-2: #f2f3f0;
+    --text: #111217;
+    --text-muted: #636773;
+    --line: #d9dde5;
+    --line-strong: #aeb5c2;
+    --accent: #e63946;
+    --accent-2: #c92233;
+    --accent-soft: #ffe9ec;
+  }
+
+  * {
+    @apply antialiased;
+  }
+
   body {
-    @apply antialiased text-gray-900 bg-gray-50;
+    font-family: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(to right, rgba(84, 92, 114, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(84, 92, 114, 0.07) 1px, transparent 1px),
+      radial-gradient(circle at 88% -15%, rgba(230, 57, 70, 0.16), transparent 26%);
+    background-size: 42px 42px, 42px 42px, 100% 100%;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Sora', 'Manrope', sans-serif;
+    letter-spacing: -0.02em;
+    color: #0c0f16;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply w-full rounded-xl border px-3 py-2.5 text-sm transition duration-200 focus:outline-none;
+    border-color: var(--line);
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #8a90a0;
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply rounded-3xl border;
+    border-color: var(--line);
+    background: linear-gradient(180deg, #f8f8f6 0%, #f2f3ef 100%);
+  }
+
+  .hero-panel {
+    @apply rounded-3xl border p-6 md:p-8;
+    border-color: var(--line);
+    background: linear-gradient(135deg, #ffffff 0%, #f2f3f0 65%);
+  }
+
+  .hero-kicker {
+    @apply text-xs font-bold uppercase tracking-[0.18em];
+    color: var(--accent);
+  }
+
+  .hero-title {
+    @apply text-4xl md:text-5xl font-extrabold leading-[1.02];
+  }
+
+  .hero-subtitle {
+    @apply mt-3 text-sm md:text-base leading-relaxed max-w-3xl;
+    color: var(--text-muted);
+  }
+
+  .feature-card {
+    @apply rounded-2xl border p-5 md:p-6;
+    border-color: var(--line);
+    background: var(--surface);
+  }
+
+  .section-title {
+    @apply text-2xl md:text-3xl font-extrabold;
+  }
+
+  .section-caption {
+    @apply text-[11px] uppercase tracking-[0.14em] font-bold;
+    color: var(--accent);
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-xs uppercase tracking-[0.11em] font-semibold;
+    color: #515867;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-bold transition duration-200;
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-2);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border px-4 py-2 text-sm font-semibold transition duration-200;
+    border-color: var(--line-strong);
+    background: #ffffff;
+    color: #161a22;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .tab-chip {
+    @apply rounded-lg px-3.5 py-2 text-sm font-semibold transition duration-200;
+    color: #5d6474;
+  }
+
+  .tab-chip-active {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .modal-card {
+    @apply rounded-2xl border;
+    border-color: var(--line);
+    background: #ffffff;
+  }
+}
+
+@layer utilities {
+  .text-app {
+    color: var(--text);
+  }
+
+  .text-app-muted {
+    color: var(--text-muted);
+  }
+
+  .border-app {
+    border-color: var(--line);
+  }
+
+  .surface-app {
+    background: var(--surface);
+  }
+
+  .surface-app-alt {
+    background: var(--surface-2);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

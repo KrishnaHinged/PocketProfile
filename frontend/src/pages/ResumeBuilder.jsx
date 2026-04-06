@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { PenLine, Eye } from 'lucide-react';
 import { PersonalInfoForm, SummaryForm } from '../components/resume/PersonalAndSummary';
 import { ExperienceForm } from '../components/resume/ExperienceForm';
 import { EducationForm, SkillsForm, ProjectsForm } from '../components/resume/OtherForms';
@@ -14,6 +15,7 @@ const ResumeBuilder = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState('Personal');
+    const [mobileView, setMobileView] = useState('form'); // 'form' | 'preview'
     const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
     const [isAtsModalOpen, setIsAtsModalOpen] = useState(false);
     const [resumeTitleInput, setResumeTitleInput] = useState('');
@@ -26,7 +28,6 @@ const ResumeBuilder = () => {
     }, [id, dispatch]);
 
     const performSave = (titleToSave) => {
-        // Sanitize data before saving to prevent Mongoose validation errors on empty rows and dates
         const sanitizeDates = (arr) => arr.map(item => {
             const sanitized = { ...item };
             if (sanitized.startDate === '') delete sanitized.startDate;
@@ -44,7 +45,6 @@ const ResumeBuilder = () => {
 
         dispatch(saveResume(resumeToSave)).then((res) => {
             if (res.meta.requestStatus === 'fulfilled' && !id) {
-                // Redirect to edit URL if this was a new creation
                 navigate(`/builder/${res.payload._id}`, { replace: true });
             }
         });
@@ -73,146 +73,154 @@ const ResumeBuilder = () => {
 
     const tabs = ['Personal', 'Experience', 'Education', 'Skills', 'Projects', 'Design'];
 
-    return (
-        <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-8rem)]">
-            {/* Form Section */}
-            <div className="w-full md:w-1/2 flex flex-col bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-
-                {/* Form Tabs and Save Button */}
-                <div className="flex justify-between items-center border-b">
-                    <div className="flex overflow-x-auto">
+    /* --- Form content (shared between desktop & mobile) --- */
+    const FormContent = (
+        <>
+            <div className="border-b border-app bg-[#f7f8f5] p-3 md:p-4">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex overflow-x-auto gap-1.5 pb-1 scrollbar-hide">
                         {tabs.map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`px-4 py-3 text-sm font-medium whitespace-nowrap ${activeTab === tab
-                                    ? 'border-b-2 border-indigo-500 text-indigo-600'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                    }`}
+                                className={`tab-chip whitespace-nowrap ${activeTab === tab ? 'tab-chip-active' : ''}`}
                             >
                                 {tab}
                             </button>
                         ))}
                     </div>
-                    <div className="pr-4 flex space-x-2">
+                    <div className="flex gap-2">
                         <button
                             onClick={handleAtsAnalysis}
                             disabled={isAtsLoading || status === 'loading'}
-                            className="inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md shadow-sm text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                            className="btn-secondary disabled:opacity-50 text-xs md:text-sm"
                         >
                             {isAtsLoading ? 'Analyzing...' : 'ATS Check'}
                         </button>
                         <button
                             onClick={handleSave}
                             disabled={status === 'loading'}
-                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                            className="btn-primary disabled:opacity-50 text-xs md:text-sm"
                         >
-                            {status === 'loading' ? 'Saving...' : 'Save Resume'}
+                            {status === 'loading' ? 'Saving...' : 'Save'}
                         </button>
                     </div>
                 </div>
+            </div>
 
-                {/* Form Content */}
-                <div className="flex-1 overflow-y-auto p-6">
-                    {activeTab === 'Personal' && (
-                        <div>
-                            <PersonalInfoForm />
-                            <SummaryForm />
-                        </div>
-                    )}
-                    {activeTab === 'Experience' && (
-                        <div>
-                            <ExperienceForm />
-                        </div>
-                    )}
-                    {activeTab === 'Education' && (
-                        <div>
-                            <EducationForm />
-                        </div>
-                    )}
-                    {activeTab === 'Skills' && (
-                        <div>
-                            <SkillsForm />
-                        </div>
-                    )}
-                    {activeTab === 'Projects' && (
-                        <div>
-                            <ProjectsForm />
-                        </div>
-                    )}
-                    {activeTab === 'Design' && (
-                        <div>
-                            <CustomizationPanel />
-                        </div>
-                    )}
+            <div className="flex-1 overflow-y-auto p-4 md:p-7 bg-white">
+                {activeTab === 'Personal' && (
+                    <div>
+                        <PersonalInfoForm />
+                        <SummaryForm />
+                    </div>
+                )}
+                {activeTab === 'Experience' && <ExperienceForm />}
+                {activeTab === 'Education' && <EducationForm />}
+                {activeTab === 'Skills' && <SkillsForm />}
+                {activeTab === 'Projects' && <ProjectsForm />}
+                {activeTab === 'Design' && <CustomizationPanel />}
+            </div>
+        </>
+    );
+
+    return (
+        <div className="flex flex-col gap-4 md:gap-6">
+            {/* Hero — hidden on mobile for compact builder */}
+            <section className="hero-panel hidden md:block">
+                <p className="hero-kicker">Resume Builder</p>
+                <h1 className="hero-title mt-2">Build Your Resume. Smarter.</h1>
+                <p className="hero-subtitle">
+                    A high-speed workspace designed for serious creators. Structure your experience in clear feature blocks and ship polished resumes with confidence.
+                </p>
+            </section>
+
+            {/* ========== MOBILE LAYOUT (< md) ========== */}
+            <div className="md:hidden flex flex-col h-[calc(100vh-5rem)]">
+                {/* Mobile toggle bar */}
+                <div className="flex bg-[#f2f3f0] rounded-xl border border-app p-1 mb-3">
+                    <button
+                        onClick={() => setMobileView('form')}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition duration-200 ${
+                            mobileView === 'form'
+                                ? 'bg-[#e63946] text-white shadow-sm'
+                                : 'text-[#5d6474]'
+                        }`}
+                    >
+                        <PenLine className="w-4 h-4" />
+                        Edit
+                    </button>
+                    <button
+                        onClick={() => setMobileView('preview')}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition duration-200 ${
+                            mobileView === 'preview'
+                                ? 'bg-[#e63946] text-white shadow-sm'
+                                : 'text-[#5d6474]'
+                        }`}
+                    >
+                        <Eye className="w-4 h-4" />
+                        Preview
+                    </button>
                 </div>
+
+                {/* Mobile: Form View */}
+                {mobileView === 'form' && (
+                    <section className="flex-1 flex flex-col feature-card overflow-hidden p-0">
+                        {FormContent}
+                    </section>
+                )}
+
+                {/* Mobile: Preview View */}
+                {mobileView === 'preview' && (
+                    <section className="flex-1 feature-card overflow-hidden flex flex-col p-0">
+                        <LivePreview />
+                    </section>
+                )}
             </div>
 
-            {/* Live Preview Section */}
-            <div className="w-full md:w-1/2 rounded-lg shadow border border-gray-200 overflow-hidden flex flex-col">
-                <LivePreview />
+            {/* ========== DESKTOP LAYOUT (>= md) ========== */}
+            <div className="hidden md:flex flex-row gap-6 h-[calc(100vh-14rem)]">
+                <section className="w-1/2 flex flex-col feature-card overflow-hidden p-0">
+                    {FormContent}
+                </section>
+
+                <section className="w-1/2 feature-card overflow-hidden flex flex-col p-0">
+                    <LivePreview />
+                </section>
             </div>
 
-            {/* Save Resume Modal */}
+            {/* Save Modal */}
             {isSaveModalOpen && (
                 <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        {/* Background overlay */}
-                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={() => setIsSaveModalOpen(false)}></div>
-
-                        {/* This element is to trick the browser into centering the modal contents. */}
+                        <div className="fixed inset-0 bg-[#0f1117]/55 transition-opacity" aria-hidden="true" onClick={() => setIsSaveModalOpen(false)}></div>
                         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div className="inline-block align-bottom modal-card text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-start">
-                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                            Name Your Resume
-                                        </h3>
-                                        <div className="mt-2">
-                                            <p className="text-sm text-gray-500 mb-4">
-                                                Please provide a professional name for this resume before saving.
-                                            </p>
-                                            <input
-                                                type="text"
-                                                value={resumeTitleInput}
-                                                onChange={(e) => setResumeTitleInput(e.target.value)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        handleModalSave();
-                                                    }
-                                                }}
-                                                className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                                placeholder="e.g., Software Engineer Resume"
-                                                autoFocus
-                                            />
-                                        </div>
+                                    <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                                        <h3 className="text-2xl font-extrabold" id="modal-title">Name This Resume</h3>
+                                        <p className="text-sm text-app-muted mt-2 mb-4">Give this version a clear, professional title.</p>
+                                        <input
+                                            type="text"
+                                            value={resumeTitleInput}
+                                            onChange={(e) => setResumeTitleInput(e.target.value)}
+                                            onKeyDown={(e) => { if (e.key === 'Enter') handleModalSave(); }}
+                                            placeholder="e.g., Senior Product Designer"
+                                            autoFocus
+                                        />
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                <button
-                                    type="button"
-                                    onClick={handleModalSave}
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                >
-                                    Save
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setIsSaveModalOpen(false)}
-                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                >
-                                    Cancel
-                                </button>
+                            <div className="bg-[#f7f8f5] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
+                                <button type="button" onClick={handleModalSave} className="btn-primary w-full sm:w-auto">Save</button>
+                                <button type="button" onClick={() => setIsSaveModalOpen(false)} className="btn-secondary mt-2 sm:mt-0 w-full sm:w-auto">Cancel</button>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* ATS Analysis Modal */}
             <AtsAnalysisModal isOpen={isAtsModalOpen} onClose={() => setIsAtsModalOpen(false)} />
         </div>
     );
