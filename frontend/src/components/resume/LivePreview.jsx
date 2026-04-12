@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import html2pdf from 'html2pdf.js';
 import TemplateManager from './templates/TemplateManager';
 import { Download, LayoutTemplate, ChevronDown } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,9 +9,11 @@ export const LivePreview = () => {
     const dispatch = useDispatch();
     const { currentResume } = useSelector(state => state.resume);
 
-    const downloadPDF = () => {
+    const downloadPDF = async () => {
         const element = resumeRef.current;
         if (!element) return;
+
+        const { default: html2pdf } = await import('html2pdf.js');
 
         const opt = {
             margin: 0,

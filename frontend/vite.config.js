@@ -10,6 +10,17 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    build: {
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['react', 'react-dom', 'react-router-dom'],
+                    redux: ['@reduxjs/toolkit', 'react-redux'],
+                },
+            },
+        },
+    },
     server: {
         port: 5173,
         proxy: {
