@@ -54,7 +54,7 @@ const Home = () => {
                         <Link to={user ? '/builder' : '/register'} className="btn-primary text-base px-8 py-3.5">
                             Start Building Now <ArrowRight className="w-5 h-5 ml-2" />
                         </Link>
-                        <a href="#features" className="btn-secondary text-base px-8 py-3.5">
+                        <a href="#how-it-works" className="btn-secondary text-base px-8 py-3.5">
                             See How It Works
                         </a>
                     </div>
@@ -135,7 +135,7 @@ const Home = () => {
             </section>
 
             {/* How it works */}
-            <section className="py-16 md:py-24 px-4 bg-white/40">
+            <section id='how-it-works' className="py-16 md:py-24 px-4 bg-white/40">
                 <div className="max-w-5xl mx-auto">
                     <div className="text-center mb-14">
                         <p className="hero-kicker">Workflow</p>
