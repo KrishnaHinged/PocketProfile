@@ -1,7 +1,11 @@
+
 import axios from "axios";
 
-// Since Vite proxy is configured
-const API_URL = "/api";
+// Use Vite proxy in dev, full URL in production
+const API_URL =
+    import.meta.env.MODE === "production"
+        ? "https://pocketprofile.onrender.com/api"
+        : "/api";
 
 // Create axios instance
 const api = axios.create({
