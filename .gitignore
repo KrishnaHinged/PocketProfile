@@ -1,1 +1,12 @@
-node_modules
+# Global IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Dependencies (fallback)
+node_modules/
+
+# Environment Variables (fallback)
+.env
+.env.*.local
