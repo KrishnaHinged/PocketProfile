@@ -69,9 +69,16 @@ Respond STRICTLY in JSON format with the following structure:
         const result = await model.generateContent(prompt);
         let responseText = result.response.text();
 
-        // Clean markdown JSON wrapper
-        responseText = responseText.replace(/```json\n?|\n?```/g, '').trim();
-        return JSON.parse(responseText);
+        let JSONText = responseText;
+        const firstBrace = responseText.indexOf('{');
+        const lastBrace = responseText.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1) {
+            JSONText = responseText.substring(firstBrace, lastBrace + 1);
+        } else {
+            JSONText = responseText.replace(/```json\n?|\n?```/g, '').trim();
+        }
+
+        return JSON.parse(JSONText);
 
     } catch (error) {
         console.error('Gemini ATS Error:', error);
